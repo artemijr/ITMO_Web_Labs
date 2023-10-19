@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="utf-8">
+    <title>Проверка точки</title>
+    <style type="text/css">
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            margin: 0;
+            padding: 0;
+            text-align: center;
+        }
+
+        #page {
+            margin: 20px;
+        }
+
+        header,
+        footer {
+            background-color: #4287f5;
+            color: #fff;
+            padding: 12px 0;
+        }
+
+        .content {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            font-size: 28px;
+            margin: 0;
+        }
+
+        h2 {
+            font-size: 24px;
+        }
+
+        input[type=button] {
+            background-color: #4287f5;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            margin: 5px;
+        }
+
+        table {
+            text-align: center;
+            border-spacing: 15px;
+            width: 100%;
+        }
+
+        th {
+            font-weight: 500;
+        }
+
+        td,
+        th {
+            padding: 1em;
+            background: #f5f5f5;
+        }
+
+        td img {
+            width: 90%;
+        }
+
+        td button {
+            background: #4287f5;
+            border: none;
+            color: #fff;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            margin-top: 1em;
+        }
+
+        td input {
+            background: #4287f5;
+            border: none;
+            color: #fff;
+            text-align: center;
+        }
+    </style>
+    <script type="text/javascript">
+        var selectedX = null; // Store the currently selected X value
+
+        function selectX(value) {
+            // Deselect the previously selected button (if any)
+            if (selectedX !== null) {
+                var prevButton = document.getElementById("x_button_" + selectedX);
+                prevButton.style.backgroundColor = "#4287f5"; // Standard color
+            }
+
+            // Select the new button and set the selectedX value
+            selectedX = value;
+            var button = document.getElementById("x_button_" + value);
+            button.style.backgroundColor = "#f00"; // New color
+
+            // Set the selected X value in the hidden input field
+            document.getElementsByName("x")[0].value = value;
+        }
+
+        function showNotification(message) {
+            var notification = document.getElementById("notification");
+            notification.innerHTML = message;
+            notification.style.display = "block";
+
+            // Hide the notification after 3 seconds (3000 milliseconds)
+            setTimeout(function () {
+                notification.style.display = "none";
+            }, 3000);
+        }
+
+        function validate() {
+            var is_valid = true;
+
+            var x_select = document.getElementsByName("x")[0].value;
+            if (!x_select) {
+                showNotification("Please select an X value.");
+                is_valid = false;
+            }
+
+            var y_text = document.getElementsByName("y")[0].value;
+            if (!/^[+-]?([0-9]*[.])?[0-9]+$/.test(y_text) || !isFinite(parseFloat(y_text)) || parseFloat(y_text) < -5 || parseFloat(y_text) > 3) {
+                showNotification("Y value must be between -5 and 3.");
+                is_valid = false;
+            }
+
+            var r_text = document.getElementsByName("r")[0].value;
+            if (!/^[+-]?([0-9]*[.])?[0-9]+$/.test(r_text) || !isFinite(parseFloat(r_text)) || parseFloat(r_text) < 2 || parseFloat(r_text) > 5) {
+                showNotification("R value must be between 2 and 5.");
+                is_valid = false;
+            }
+
+            return is_valid;
+        }
+        function fetchResults() {
+            // Check if the form input is valid before sending the request
+            if (validate()) {
+                // Get the selected X value
+                var x = document.getElementsByName("x")[0].value;
+
+                // Get the user's local date and time
+                var userLocalDateTime = new Date().toLocaleString();
+
+                // Send an AJAX request to response.php with the selected parameters and user's local date and time
+                var xhr = new XMLHttpRequest();
+                xhr.open("GET", "response.php?x=" + x + "&y=" + document.getElementsByName("y")[0].value + "&r=" + document.getElementsByName("r")[0].value + "&userLocalDateTime=" + userLocalDateTime, true);
+
+                xhr.onreadystatechange = function () {
+                    if (xhr.readyState === 4 && xhr.status === 200) {
+                        // Update the "results" div with the response
+                        document.getElementById("results").innerHTML = xhr.responseText;
+                    }
+                };
+
+                xhr.send();
+            }
+        }
+
+        function clearTable() {
+            // Send an AJAX request to clear_results.php to clear the table
+            var xhr = new XMLHttpRequest();
+            xhr.open("GET", "clear_results.php", true);
+
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState === 4 && xhr.status === 200) {
+                    // Clear the contents of the "results" div
+                    document.getElementById("results").innerHTML = xhr.responseText;
+                }
+            };
+
+            xhr.send();
+        }
+    </script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            // Send an AJAX request to load_results.php to display results on page load
+            var xhr = new XMLHttpRequest();
+            xhr.open("GET", "load_results.php", true);
+
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState === 4 && xhr.status === 200) {
+                    // Update the "results" div with the response
+                    document.getElementById("results").innerHTML = xhr.responseText;
+                }
+            };
+
+            xhr.send();
+        });
+    </script>
+</head>
+
+<body id="page">
+    <header>
+        <h1>Проверка попадания точки в график</h1>
+        <h2>Родионов Артем Алексеевич <span>P3221</span></h2>
+        <h2>Вариант - <span>3127</span></h2>
+    </header>
+    <div class="content">
+        <!-- Notification div -->
+        <div id="notification"
+            style="display: none; position: absolute; top: 10px; right: 10px; background-color: #f44336; color: white; padding: 10px; border-radius: 5px;">
+        </div>
+
+        <form onsubmit="return validate();">
+            <table>
+                <thead>
+                    <tr>
+                        <th colspan="3">Введите данные для определения вхождения точки в представленную область</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>
+                            <h3>X</h3>
+                            <p>
+                                <input id="x_button_-3" type="button" value="-3" onclick="selectX(-3)">
+                                <input id="x_button_-2" type="button" value="-2" onclick="selectX(-2)">
+                                <input id="x_button_-1" type="button" value="-1" onclick="selectX(-1)">
+                                <input id="x_button_0" type="button" value="0" onclick="selectX(0)">
+                                <input id="x_button_1" type="button" value="1" onclick="selectX(1)">
+                                <input id="x_button_2" type="button" value="2" onclick="selectX(2)">
+                                <input id="x_button_3" type="button" value="3" onclick="selectX(3)">
+                                <input id="x_button_4" type="button" value="4" onclick="selectX(4)">
+                                <input id="x_button_5" type="button" value="5" onclick="selectX(5)">
+                                <input type="hidden" name="x" value="">
+                            </p>
+                        </td>
+                        <td>
+                            <h3>Y</h3>
+                            <p><input type="text" maxlength="5" size="6" name="y" placeholder=" от -5 до 3"></p>
+                        </td>
+                        <td style="background: #0000;"><img src="img.png"></td>
+                    </tr>
+                    <tr>
+                        <td colspan="2">
+                            <h3>R</h3>
+                            <p><input type="text" maxlength="5" size="6" name="r" placeholder=" от 2 до 5"></p>
+                        </td>
+                        <td style="background: #0000;">
+                            <button class="checkButton buttonLetter" type="button" onclick="fetchResults();">
+                                Выполнить проверку
+                            </button>
+                            <button class="clearButton buttonLetter" type="button" onclick="clearTable();">
+                                Очистить таблицу
+                            </button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </form>
+        <div id="results">
+            <!-- Results will be displayed here -->
+        </div>
+    </div>
+</body>
+
+</html>
