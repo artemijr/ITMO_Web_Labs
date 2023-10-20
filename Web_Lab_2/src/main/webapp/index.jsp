@@ -96,6 +96,7 @@
 <script src="js/main.js"></script>
 <script src="js/selectX.js"></script>
 <script src="js/validate.js"></script>
+<script src="js/handleCanvas.js"></script>
 <script src="js/drawCoordinatePlane.js"></script>
 <script src="js/showNotification.js"></script>
 

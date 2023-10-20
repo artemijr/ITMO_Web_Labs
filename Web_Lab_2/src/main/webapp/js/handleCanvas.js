@@ -1,3 +1,4 @@
+//handleCanvas.js
 function handleCanvasClick(event) {
     // Retrieve the canvas and its context
     const canvas = document.getElementById("coordinateCanvas");
