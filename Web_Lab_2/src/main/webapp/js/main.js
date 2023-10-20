@@ -47,9 +47,7 @@ function clearTable() {
     xhr.onreadystatechange = () => {
         if (xhr.readyState === 4 && xhr.status === 200) {
             // Display a confirmation message
-            const notification = document.getElementById("notification");
-            notification.innerHTML = xhr.responseText;
-            notification.style.display = "block";
+            showNotification(xhr.responseText);
         }
     };
 
