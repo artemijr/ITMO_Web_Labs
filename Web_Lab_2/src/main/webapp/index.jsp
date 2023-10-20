@@ -51,7 +51,7 @@
                     </label></p>
                 </td>
                 <td>
-                    <canvas id="coordinateCanvas" width="300" height="300" style="border: 1px solid black;"></canvas>
+                    <canvas id="coordinateCanvas" width="500" height="500" style="border: 1px solid black;"></canvas>
                 </td>
             </tr>
             <tr>

@@ -62,6 +62,7 @@ function drawCoordinatePlane() {
     drawArrowhead(context, canvas.width , centerY, -Math.PI / -2);
     drawArrowhead(context, centerX, 0, 0);
 
+    canvas.addEventListener("click", handleCanvasClick);
 }
 
 // Call this function to initially draw the coordinate plane

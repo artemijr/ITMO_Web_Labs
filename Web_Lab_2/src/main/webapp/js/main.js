@@ -33,7 +33,6 @@ function fetchResults() {
     }
 }
 
-
 function clearTable() {
     // Clear the displayed table
     const resultsElement = document.getElementById("resultsTable").querySelector("tbody");

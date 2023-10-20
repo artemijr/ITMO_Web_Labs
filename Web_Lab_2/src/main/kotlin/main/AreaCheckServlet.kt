@@ -9,18 +9,21 @@ import jakarta.servlet.http.HttpServletResponse
 class AreaCheckServlet : HttpServlet() {
     override fun doGet(request: HttpServletRequest, response: HttpServletResponse) {
         response.characterEncoding = "UTF-8"
-        val x = request.getParameter("x").toInt()
-        val y = request.getParameter("y").toDouble()
-        val r = request.getParameter("r").toDouble()
-        val userLocalDateTime = request.getParameter("userLocalDateTime")
 
-        val validXValues = listOf(-3, -2, -1, 0, 1, 2, 3, 4, 5)
+        val xStr = request.getParameter("x")
+        val yStr = request.getParameter("y")
+        val rStr = request.getParameter("r")
+        val userLocalDateTime = request.getParameter("userLocalDateTime")
 
         var result = ""
         val startTime = System.nanoTime()
 
         try {
-            if (x in validXValues && y in -5.0..3.0 && r in 2.0..5.0) {
+            val x = xStr?.toDoubleOrNull()
+            val y = yStr?.toDoubleOrNull()
+            val r = rStr?.toDoubleOrNull()
+
+            if (x != null && y != null && r != null) {
                 // Check which quarter the point falls into
                 if (x >= 0 && y >= 0) {
                     result = if (y <= r && x <= r / 2) {
@@ -37,7 +40,7 @@ class AreaCheckServlet : HttpServlet() {
                         "Точка не входит в область определения"
                     }
                 } else if (x >= 0 && y <= 0) {
-                    result = if ((x * x + y * y) <= (r * r) / 4) {
+                    result = if ((x * x + y * y) <= (r * r) ) {
                         "Точка входит в область определения"
                     } else {
                         "Точка не входит в область определения"

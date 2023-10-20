@@ -23,3 +23,7 @@ function validate() {
 
     return isValid;
 }
+function validateR() {
+    const r = document.getElementsByName("r")[0].value;
+    return r !== "";
+}
