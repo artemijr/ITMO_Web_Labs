@@ -50,7 +50,9 @@
                         <input type="text" maxlength="5" size="6" name="y" placeholder=" от -5 до 3">
                     </label></p>
                 </td>
-                <td style="background: #0000;"><img src="img/img.png" alt=""></td>
+                <td>
+                    <canvas id="coordinateCanvas" width="300" height="300" style="border: 1px solid black;"></canvas>
+                </td>
             </tr>
             <tr>
                 <td colspan="2">
