@@ -1,5 +1,10 @@
 //main.js
 
+
+/**
+ * fetchResults sends an HTTP request to the server to perform point verification.
+ * It processes the server's response and updates the results table.
+ */
 function fetchResults() {
     if (validate()) {
         const x = document.getElementsByName("x")[0].value;
@@ -33,6 +38,10 @@ function fetchResults() {
     }
 }
 
+
+/**
+ * clearTable clears the displayed results table and removes results from Local Storage.
+ */
 function clearTable() {
     // Clear the displayed table
     const resultsElement = document.getElementById("resultsTable").querySelector("tbody");
@@ -55,6 +64,9 @@ function clearTable() {
 }
 
 
+/**
+ * Load results from Local Storage and append them to the table on page load.
+ */
 document.addEventListener("DOMContentLoaded", () => {
     // Load results from LocalStorage and append them to the table
     const savedResults = localStorage.getItem("results");

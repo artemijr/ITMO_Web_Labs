@@ -1,5 +1,10 @@
 //validate.js
 
+/**
+ * validate checks the form inputs for validity and displays error notifications.
+ *
+ * @returns {boolean} - True if the form inputs are valid; otherwise, false.
+ */
 function validate() {
     let isValid = true;
 
@@ -23,6 +28,12 @@ function validate() {
 
     return isValid;
 }
+
+/**
+ * validateR checks if the R value in the form input is set.
+ *
+ * @returns {boolean} - True if the R value is set; otherwise, false.
+ */
 function validateR() {
     const r = document.getElementsByName("r")[0].value;
     return r !== "";

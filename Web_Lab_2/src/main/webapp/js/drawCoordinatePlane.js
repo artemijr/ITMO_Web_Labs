@@ -1,5 +1,10 @@
 //drawCoordinatePlane.js
 
+
+/**
+ * drawCoordinatePlane draws the coordinate plane and predefined areas for the graph.
+ * It also labels axes, quadrants, and provides R markers.
+ */
 function drawCoordinatePlane() {
     const canvas = document.getElementById("coordinateCanvas");
     const context = canvas.getContext("2d");
@@ -14,7 +19,7 @@ function drawCoordinatePlane() {
     context.fillStyle = "blue";
 
     // First quadrant
-    context.fillRect(centerX, centerY, 0.35 * centerX, -centerY*0.7);
+    context.fillRect(centerX, centerY, 0.35 * centerX, -centerY * 0.7);
 
     // Third quadrant (triangle)
     context.beginPath();
@@ -59,15 +64,25 @@ function drawCoordinatePlane() {
     context.fillText("Y", centerX + 5, 15);
 
     // Arrowheads for X and Y axes
-    drawArrowhead(context, canvas.width , centerY, -Math.PI / -2);
+    drawArrowhead(context, canvas.width, centerY, -Math.PI / -2);
     drawArrowhead(context, centerX, 0, 0);
 
+    // Add an event listener for canvas click events
     canvas.addEventListener("click", handleCanvasClick);
 }
 
 // Call this function to initially draw the coordinate plane
 drawCoordinatePlane();
 
+
+/**
+ * drawArrowhead draws an arrowhead at a given position with a specified angle.
+ *
+ * @param {CanvasRenderingContext2D} context - The canvas context to draw on.
+ * @param {number} x - X-coordinate for the arrowhead.
+ * @param {number} y - Y-coordinate for the arrowhead.
+ * @param {number} angle - The angle at which to draw the arrowhead.
+ */
 function drawArrowhead(context, x, y, angle) {
     const arrowSize = 10;
     context.save();

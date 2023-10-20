@@ -1,5 +1,9 @@
-//selectX.js
-
+/**
+ * selectX updates the selected X value in the input field and highlights the
+ * corresponding X button.
+ *
+ * @param {number} value - The X value to be selected.
+ */
 let selectedX = null; // Store the currently selected X value
 
 function selectX(value) {

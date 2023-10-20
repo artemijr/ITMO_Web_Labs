@@ -1,7 +1,10 @@
 package main
-
+/**
+ * ResultBean is a data class representing the result of point coordinates verification.
+ * It contains properties such as x, y, r, result, userLocalDateTime, and executionTime.
+ */
 class ResultBean {
-    // Getters and setters for the properties
+    // Properties for storing result data
     var x = 0.0
     var y = 0.0
     var r = 0.0

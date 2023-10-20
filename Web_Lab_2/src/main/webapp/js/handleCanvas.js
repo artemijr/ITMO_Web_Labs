@@ -1,4 +1,11 @@
 //handleCanvas.js
+
+/**
+ * handleCanvasClick handles the canvas click event, drawing a point and sending
+ * server-side coordinates for verification.
+ *
+ * @param {MouseEvent} event - The click event.
+ */
 function handleCanvasClick(event) {
     // Retrieve the canvas and its context
     const canvas = document.getElementById("coordinateCanvas");
@@ -27,6 +34,16 @@ function handleCanvasClick(event) {
     }
 }
 
+
+/**
+ * sendCoordinatesForVerification sends the server-side coordinates for verification.
+ * It calculates server-side coordinates from canvas coordinates and sends a request
+ * to the server.
+ *
+ * @param {number} xCanvas - X-coordinate on the canvas.
+ * @param {number} yCanvas - Y-coordinate on the canvas.
+ * @param {number} r - The radius value.
+ */
 function sendCoordinatesForVerification(xCanvas, yCanvas, r) {
     // Calculate the server-side x and y values from canvas coordinates
     const canvas = document.getElementById("coordinateCanvas");
