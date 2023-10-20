@@ -5,6 +5,9 @@ import jakarta.servlet.http.HttpServlet
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
 
+import java.math.BigDecimal
+import java.math.RoundingMode
+
 @WebServlet(name = "AreaCheckServlet", value = ["/AreaCheckServlet"])
 class AreaCheckServlet : HttpServlet() {
     override fun doGet(request: HttpServletRequest, response: HttpServletResponse) {
@@ -53,13 +56,20 @@ class AreaCheckServlet : HttpServlet() {
             val endTime = System.nanoTime()
             val executionTimeMs = ((endTime - startTime) / 1e6)
 
+            val fX= BigDecimal(x).setScale(3, RoundingMode.FLOOR).toDouble()
+            val fY = BigDecimal(y).setScale(3, RoundingMode.FLOOR).toDouble()
+            val fR = BigDecimal(r).setScale(3, RoundingMode.FLOOR).toDouble()
+            val fExecutionTime = BigDecimal(executionTimeMs).setScale(3, RoundingMode.FLOOR).toDouble()
+
+
+
             val resultBean = ResultBean()
-            resultBean.x = x
-            resultBean.y = y
-            resultBean.r = r
+            resultBean.x = fX
+            resultBean.y = fY
+            resultBean.r = fR
             resultBean.result = result
             resultBean.userLocalDateTime = userLocalDateTime
-            resultBean.executionTime = executionTimeMs
+            resultBean.executionTime = fExecutionTime
 
             request.setAttribute("resultBean", resultBean)
 
