@@ -35,11 +35,8 @@ class LoadResultsServlet : HttpServlet() {
             }
 
             val htmlResponse =
-                "<table><thead><tr><th>X</th><th>Y</th><th>R</th><th>Результат</th><th>Локальное дата и время</th><th>Время выполнения</th></tr></thead><tbody>$tableHtml</tbody></table>"
+                "<table><tbody>$tableHtml</tbody></table>"
             response.writer.write(htmlResponse)
-        } else {
-            // If there are no results, display a message
-            response.writer.write("<p>Нет результатов, чтобы показать.</p>")
         }
     }
 }
