@@ -76,16 +76,6 @@
 
     <div id="resultsTable">
         <table>
-            <thead>
-            <tr>
-                <th>X</th>
-                <th>Y</th>
-                <th>R</th>
-                <th>Результат</th>
-                <th>Локальное дата и время</th>
-                <th>Время выполнения</th>
-            </tr>
-            </thead>
             <tbody>
             <!-- Results will be displayed here -->
             </tbody>

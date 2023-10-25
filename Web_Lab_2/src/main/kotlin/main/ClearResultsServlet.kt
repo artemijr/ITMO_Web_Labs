@@ -8,7 +8,7 @@ import jakarta.servlet.http.HttpServletResponse
 @WebServlet(name = "ClearResultsServlet", value = ["/ClearResultsServlet"])
 class ClearResultsServlet : HttpServlet() {
     /**
-     * Handles a GET request to clear the results table.
+     * Handles a GET request to clear the results table and session-stored ResultBean objects.
      *
      * @param request The HttpServletRequest.
      * @param response The HttpServletResponse for sending a response back to the client.

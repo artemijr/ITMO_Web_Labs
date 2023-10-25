@@ -1,6 +1,3 @@
-//main.js
-
-
 /**
  * fetchResults sends an HTTP request to the server to perform point verification.
  * It processes the server's response and updates the results table.
@@ -25,12 +22,6 @@ function fetchResults() {
                 newRow.innerHTML = xhr.responseText;
 
                 resultsElement.appendChild(newRow);
-
-                // Store the new results in LocalStorage
-                const currentResults = localStorage.getItem("results") || "[]";
-                const resultsArray = JSON.parse(currentResults);
-                resultsArray.push(xhr.responseText);
-                localStorage.setItem("results", JSON.stringify(resultsArray));
             }
         };
 
@@ -43,13 +34,10 @@ function fetchResults() {
  * clearTable clears the displayed results table and removes results from Local Storage.
  */
 function clearTable() {
-    // Clear the displayed table
     const resultsElement = document.getElementById("resultsTable").querySelector("tbody");
     resultsElement.innerHTML = "";
 
-    // Clear results from Local Storage
-    localStorage.setItem("results", JSON.stringify([]));
-
+    // Send a request to clear the session-stored results
     const xhr = new XMLHttpRequest();
     xhr.open("GET", "ClearResultsServlet", true);
 
@@ -57,27 +45,34 @@ function clearTable() {
         if (xhr.readyState === 4 && xhr.status === 200) {
             // Display a confirmation message
             showNotification(xhr.responseText);
+
+            // Clear the session-stored results from the ResultBean array in the main.js
+            const contextPath = window.location.pathname.substring(0, window.location.pathname.indexOf("/", 2));
+            const url = `${contextPath}/ClearResultsServlet`;
+            const clearResultsXhr = new XMLHttpRequest();
+            clearResultsXhr.open("GET", url, true);
+            clearResultsXhr.send();
         }
     };
 
     xhr.send();
 }
 
-
 /**
  * Load results from Local Storage and append them to the table on page load.
  */
 document.addEventListener("DOMContentLoaded", () => {
-    // Load results from LocalStorage and append them to the table
-    const savedResults = localStorage.getItem("results");
-    if (savedResults) {
-        const resultsArray = JSON.parse(savedResults);
-        const resultsElement = document.getElementById("resultsTable").querySelector("tbody");
+    const contextPath = window.location.pathname.substring(0, window.location.pathname.indexOf("/", 2));
+    const url = `${contextPath}/LoadResultsServlet`;
+    const xhr = new XMLHttpRequest();
+    xhr.open("GET", url, true);
 
-        for (const result of resultsArray) {
-            const newRow = document.createElement("tr");
-            newRow.innerHTML = result;
-            resultsElement.appendChild(newRow);
+    xhr.onreadystatechange = () => {
+        if (xhr.readyState === 4 && xhr.status === 200) {
+            const resultsElement = document.getElementById("resultsTable").querySelector("tbody");
+            resultsElement.innerHTML = xhr.responseText;
         }
-    }
+    };
+
+    xhr.send();
 });
