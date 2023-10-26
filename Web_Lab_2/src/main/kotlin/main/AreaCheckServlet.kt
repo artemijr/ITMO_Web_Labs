@@ -18,9 +18,37 @@ class AreaCheckServlet : HttpServlet() {
         val rStr = request.getParameter("r")
         val userLocalDateTime = request.getParameter("userLocalDateTime")
 
-        var result = ""
         val startTime = System.nanoTime()
 
+        val result = processPoint(xStr, yStr, rStr)
+
+        // Round values to 3 decimal places
+        val fX = BigDecimal(xStr).setScale(3, RoundingMode.FLOOR).toDouble()
+        val fY = BigDecimal(yStr).setScale(3, RoundingMode.FLOOR).toDouble()
+        val fR = BigDecimal(rStr).setScale(3, RoundingMode.FLOOR).toDouble()
+
+        val endTime = System.nanoTime()
+        val executionTimeMs = ((endTime - startTime) / 1e6)
+
+        val fExecutionTime = BigDecimal(executionTimeMs).setScale(3, RoundingMode.FLOOR).toDouble()
+
+        // Create a ResultBean and set attributes
+        val resultBean = ResultBean(fX, fY, fR, result, userLocalDateTime, fExecutionTime)
+
+        // Store the ResultBean in the session
+        val session = request.session
+        val results = session.getAttribute("results") as? MutableList<ResultBean> ?: mutableListOf()
+
+        results.add(resultBean)
+        session.setAttribute("results", results)
+
+        request.setAttribute("resultBean", resultBean)
+
+        // Forward to the result JSP page
+        request.getRequestDispatcher("jsp/result.jsp").forward(request, response)
+    }
+
+    private fun processPoint(xStr: String?, yStr: String?, rStr: String?): String {
         try {
             // Parse input values to doubles
             val x = xStr?.toDoubleOrNull()
@@ -28,61 +56,34 @@ class AreaCheckServlet : HttpServlet() {
             val r = rStr?.toDoubleOrNull()
 
             if (x != null && y != null && r != null) {
-                // Check which quarter the point falls into
-
-                if (x >= 0 && y >= 0) {
-                    // Check the first quarter: x >= 0 and y >= 0
-                    result = if (y <= r && x <= r / 2) {
-                        "Точка входит в область определения"
-                    } else {
-                        "Точка не входит в область определения"
-                    }
-                } else if (x <= 0 && y >= 0) {
-                    // Check the second quarter: x <= 0 and y >= 0
-                    result = "Точка не входит в область определения"
-                } else if (x <= 0 && y <= 0) {
-                    result = if (y >= -r && x >= -r / 2 && -r * x * 2 - r * r <= y * r) {
-                        "Точка входит в область определения"
-                    } else {
-                        "Точка не входит в область определения"
-                    }
-                } else if (x >= 0 && y <= 0) {
-                    // Check the fourth quarter: x >= 0 and y <= 0
-                    result = if ((x * x + y * y) <= (r * r)) {
-                        "Точка входит в область определения"
-                    } else {
-                        "Точка не входит в область определения"
-                    }
+                return when {
+                    isPointInFirstQuarter(x, y, r) -> "Точка входит в область определения"
+                    isPointInSecondQuarter(x, y) -> "Точка не входит в область определения"
+                    isPointInThirdQuarter(x, y, r) -> "Точка входит в область определения"
+                    isPointInFourthQuarter(x, y, r) -> "Точка входит в область определения"
+                    else -> "Точка не входит в область определения"
                 }
-
-                val endTime = System.nanoTime()
-                val executionTimeMs = ((endTime - startTime) / 1e6)
-
-                // Round values to 3 decimal places
-                val fX = BigDecimal(x).setScale(3, RoundingMode.FLOOR).toDouble()
-                val fY = BigDecimal(y).setScale(3, RoundingMode.FLOOR).toDouble()
-                val fR = BigDecimal(r).setScale(3, RoundingMode.FLOOR).toDouble()
-                val fExecutionTime = BigDecimal(executionTimeMs).setScale(3, RoundingMode.FLOOR).toDouble()
-
-                // Create a ResultBean and set attributes
-                val resultBean = ResultBean(fX, fY, fR, result, userLocalDateTime, fExecutionTime)
-
-                // Store the ResultBean in the session
-                val session = request.session
-                val results = session.getAttribute("results") as? MutableList<ResultBean> ?: mutableListOf()
-                results.add(resultBean)
-                session.setAttribute("results", results)
-
-                request.setAttribute("resultBean", resultBean)
-
-                // Forward to the result JSP page
-                request.getRequestDispatcher("jsp/result.jsp").forward(request, response)
             } else {
                 throw Exception("Неверный ввод. Пожалуйста, убедитесь, что вы вводите корректные значения.")
             }
         } catch (e: Exception) {
-            // Handle exceptions by sending a 400 Bad Request response
-            response.sendError(400, e.message)
+            return "Error: ${e.message}"
         }
+    }
+
+    private fun isPointInFirstQuarter(x: Double, y: Double, r: Double): Boolean {
+        return x >= 0 && y >= 0 && y <= r && x <= r / 2
+    }
+
+    private fun isPointInSecondQuarter(x: Double, y: Double): Boolean {
+        return x <= 0 && y >= 0
+    }
+
+    private fun isPointInThirdQuarter(x: Double, y: Double, r: Double): Boolean {
+        return x <= 0 && y <= 0 && y >= -r && x >= -r / 2 && -r * x * 2 - r * r <= y * r
+    }
+
+    private fun isPointInFourthQuarter(x: Double, y: Double, r: Double): Boolean {
+        return x >= 0 && y <= 0 && (x * x + y * y) <= (r * r)
     }
 }

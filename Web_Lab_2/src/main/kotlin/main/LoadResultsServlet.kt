@@ -19,12 +19,6 @@ class LoadResultsServlet : HttpServlet() {
     override fun doGet(request: HttpServletRequest, response: HttpServletResponse) {
         response.characterEncoding = "UTF-8"
 
-        val clearTable = request.getParameter("clearTable")
-        if (clearTable != null && clearTable == "true") {
-            // Clear the table and session attribute if clearTable parameter is provided
-            request.session.removeAttribute("results")
-        }
-
         // Retrieve results from the session, if available
         val results = (request.session.getAttribute("results") as? List<*>)?.filterIsInstance<ResultBean>()
 
