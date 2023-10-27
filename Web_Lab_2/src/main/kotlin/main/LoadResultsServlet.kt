@@ -20,16 +20,14 @@ class LoadResultsServlet : HttpServlet() {
         response.characterEncoding = "UTF-8"
 
         // Retrieve results from the session, if available
-        val results = (request.session.getAttribute("results") as? List<*>)?.filterIsInstance<ResultBean>()
+        val results = (request.session.getAttribute("results") as? List<*>)?.filterIsInstance<ResultData>()
 
         if (!results.isNullOrEmpty()) {
-            // If there are results, format them into an HTML table
-            val tableHtml = results.joinToString(separator = "") { result ->
-                "<tr><td>${result.x}</td><td>${result.y}</td><td>${result.r}</td><td>${result.result}</td><td>${result.userLocalDateTime}</td><td>${result.executionTime} ms</td></tr>"
+            val tableHtml = results.joinToString(separator = "") { resultData ->
+                "<tr><td>${resultData.x}</td><td>${resultData.y}</td><td>${resultData.r}</td><td>${resultData.result}</td><td>${resultData.userLocalDateTime}</td><td>${resultData.executionTime} ms</td></tr>"
             }
 
-            val htmlResponse =
-                "<table><tbody>$tableHtml</tbody></table>"
+            val htmlResponse = "<table><tbody>$tableHtml</tbody></table>"
             response.writer.write(htmlResponse)
         }
     }

@@ -9,10 +9,10 @@ import java.math.RoundingMode
 
 @WebServlet(name = "AreaCheckServlet", value = ["/AreaCheckServlet"])
 class AreaCheckServlet : HttpServlet() {
+    private val resultBeanComponent = ResultBeanComponent()
     override fun doGet(request: HttpServletRequest, response: HttpServletResponse) {
         response.characterEncoding = "UTF-8"
 
-        // Get the input parameters
         val xStr = request.getParameter("x")
         val yStr = request.getParameter("y")
         val rStr = request.getParameter("r")
@@ -22,29 +22,21 @@ class AreaCheckServlet : HttpServlet() {
 
         val result = processPoint(xStr, yStr, rStr)
 
-        // Round values to 3 decimal places
         val fX = BigDecimal(xStr).setScale(3, RoundingMode.FLOOR).toDouble()
         val fY = BigDecimal(yStr).setScale(3, RoundingMode.FLOOR).toDouble()
         val fR = BigDecimal(rStr).setScale(3, RoundingMode.FLOOR).toDouble()
 
         val endTime = System.nanoTime()
         val executionTimeMs = ((endTime - startTime) / 1e6)
-
         val fExecutionTime = BigDecimal(executionTimeMs).setScale(3, RoundingMode.FLOOR).toDouble()
 
-        // Create a ResultBean and set attributes
-        val resultBean = ResultBean(fX, fY, fR, result, userLocalDateTime, fExecutionTime)
+        val resultData = ResultData(fX, fY, fR, result, userLocalDateTime, fExecutionTime)
 
-        // Store the ResultBean in the session
-        val session = request.session
-        val results = session.getAttribute("results") as? MutableList<ResultBean> ?: mutableListOf()
+        // Store the result on the server
+        resultBeanComponent.addResult(request.session, resultData)
 
-        results.add(resultBean)
-        session.setAttribute("results", results)
+        request.setAttribute("resultData", resultData)
 
-        request.setAttribute("resultBean", resultBean)
-
-        // Forward to the result JSP page
         request.getRequestDispatcher("jsp/result.jsp").forward(request, response)
     }
 

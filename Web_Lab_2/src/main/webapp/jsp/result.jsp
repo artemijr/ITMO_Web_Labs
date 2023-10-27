@@ -1,4 +1,4 @@
-<jsp:useBean id="resultBean" scope="request" type="main.ResultBean"/>
+<jsp:useBean id="resultData" scope="request" type="main.ResultData"/>
 <%@ page contentType="text/html;charset=UTF-8" %>
 
 <!DOCTYPE html>
@@ -10,17 +10,17 @@
 <body>
 <table>
     <tr>
-        <td><%= resultBean.getX() %>
+        <td><%= resultData.getX() %>
         </td>
-        <td><%= resultBean.getY() %>
+        <td><%= resultData.getY() %>
         </td>
-        <td><%= resultBean.getR() %>
+        <td><%= resultData.getR() %>
         </td>
-        <td><%= resultBean.getResult() %>
+        <td><%= resultData.getResult() %>
         </td>
-        <td><%= resultBean.getUserLocalDateTime() %>
+        <td><%= resultData.getUserLocalDateTime() %>
         </td>
-        <td><%= resultBean.getExecutionTime() %> ms</td>
+        <td><%= resultData.getExecutionTime() %> ms</td>
 
     </tr>
 </table>

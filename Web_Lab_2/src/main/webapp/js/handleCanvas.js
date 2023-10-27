@@ -34,7 +34,6 @@ function handleCanvasClick(event) {
     }
 }
 
-
 /**
  * sendCoordinatesForVerification sends the server-side coordinates for verification.
  * It calculates server-side coordinates from canvas coordinates and sends a request
@@ -53,8 +52,8 @@ function sendCoordinatesForVerification(xCanvas, yCanvas, r) {
     // Calculate the server-side coordinates considering the entire canvas area
     const offsetX = canvasWidth / 2;
     const offsetY = canvasHeight / 2;
-    const serverX = (xCanvas - offsetX) * (2 * r / canvasWidth/0.7);
-    const serverY = (offsetY - yCanvas) * (2 * r / canvasHeight/0.7);
+    const serverX = (xCanvas - offsetX) * (2 * r / canvasWidth / 0.7);
+    const serverY = (offsetY - yCanvas) * (2 * r / canvasHeight / 0.7);
 
     const userLocalDateTime = new Date().toLocaleString();
     const contextPath = window.location.pathname.substring(0, window.location.pathname.indexOf("/", 2));
@@ -64,20 +63,11 @@ function sendCoordinatesForVerification(xCanvas, yCanvas, r) {
 
     xhr.onreadystatechange = () => {
         if (xhr.readyState === 4 && xhr.status === 200) {
-            // Handle the server's response if needed
-            const result = xhr.responseText;
-
             // Display the result in the results table
             const resultsElement = document.getElementById("resultsTable").querySelector("tbody");
             const newRow = document.createElement("tr");
-            newRow.innerHTML = result;
+            newRow.innerHTML = xhr.responseText;
             resultsElement.appendChild(newRow);
-
-            // Store the new result in LocalStorage
-            const currentResults = localStorage.getItem("results") || "[]";
-            const resultsArray = JSON.parse(currentResults);
-            resultsArray.push(result);
-            localStorage.setItem("results", JSON.stringify(resultsArray));
         }
     };
 

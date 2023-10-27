@@ -15,12 +15,10 @@ function fetchResults() {
 
         xhr.onreadystatechange = () => {
             if (xhr.readyState === 4 && xhr.status === 200) {
+                // Display the result in the results table
                 const resultsElement = document.getElementById("resultsTable").querySelector("tbody");
-
-                // Create a new row and append it to the existing results table
                 const newRow = document.createElement("tr");
                 newRow.innerHTML = xhr.responseText;
-
                 resultsElement.appendChild(newRow);
             }
         };
@@ -62,6 +60,10 @@ function clearTable() {
  * Load results from Local Storage and append them to the table on page load.
  */
 document.addEventListener("DOMContentLoaded", () => {
+    fetchServerResults();
+});
+
+function fetchServerResults() {
     const contextPath = window.location.pathname.substring(0, window.location.pathname.indexOf("/", 2));
     const url = `${contextPath}/LoadResultsServlet`;
     const xhr = new XMLHttpRequest();
@@ -75,4 +77,4 @@ document.addEventListener("DOMContentLoaded", () => {
     };
 
     xhr.send();
-});
+}
