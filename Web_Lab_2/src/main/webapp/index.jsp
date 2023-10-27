@@ -93,6 +93,7 @@
     </div>
 
 </div>
+<script src="js/sharedFunctions.js"></script>
 <script src="js/main.js"></script>
 <script src="js/selectX.js"></script>
 <script src="js/validate.js"></script>

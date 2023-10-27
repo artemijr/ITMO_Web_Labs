@@ -36,8 +36,6 @@ function handleCanvasClick(event) {
 
 /**
  * sendCoordinatesForVerification sends the server-side coordinates for verification.
- * It calculates server-side coordinates from canvas coordinates and sends a request
- * to the server.
  *
  * @param {number} xCanvas - X-coordinate on the canvas.
  * @param {number} yCanvas - Y-coordinate on the canvas.
@@ -58,18 +56,10 @@ function sendCoordinatesForVerification(xCanvas, yCanvas, r) {
     const userLocalDateTime = new Date().toLocaleString();
     const contextPath = window.location.pathname.substring(0, window.location.pathname.indexOf("/", 2));
     const url = `${contextPath}/AreaCheckServlet?x=${serverX}&y=${serverY}&r=${r}&userLocalDateTime=${userLocalDateTime}`;
-    const xhr = new XMLHttpRequest();
-    xhr.open("GET", url, true);
 
-    xhr.onreadystatechange = () => {
-        if (xhr.readyState === 4 && xhr.status === 200) {
-            // Display the result in the results table
-            const resultsElement = document.getElementById("resultsTable").querySelector("tbody");
-            const newRow = document.createElement("tr");
-            newRow.innerHTML = xhr.responseText;
-            resultsElement.appendChild(newRow);
-        }
-    };
-
-    xhr.send();
+    // Use the shared function to send the request
+    sendRequest(url, (response) => {
+        // Use the shared function to append the result to the table
+        appendResultToTable(response);
+    });
 }

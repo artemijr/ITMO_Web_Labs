@@ -10,20 +10,12 @@ function fetchResults() {
         const userLocalDateTime = new Date().toLocaleString();
         const contextPath = window.location.pathname.substring(0, window.location.pathname.indexOf("/", 2));
         const url = `${contextPath}/AreaCheckServlet?x=${x}&y=${y}&r=${r}&userLocalDateTime=${userLocalDateTime}`;
-        const xhr = new XMLHttpRequest();
-        xhr.open("GET", url, true);
 
-        xhr.onreadystatechange = () => {
-            if (xhr.readyState === 4 && xhr.status === 200) {
-                // Display the result in the results table
-                const resultsElement = document.getElementById("resultsTable").querySelector("tbody");
-                const newRow = document.createElement("tr");
-                newRow.innerHTML = xhr.responseText;
-                resultsElement.appendChild(newRow);
-            }
-        };
-
-        xhr.send();
+        // Use the shared function to send the request
+        sendRequest(url, (response) => {
+            // Use the shared function to append the result to the table
+            appendResultToTable(response);
+        });
     }
 }
 
@@ -36,24 +28,14 @@ function clearTable() {
     resultsElement.innerHTML = "";
 
     // Send a request to clear the session-stored results
-    const xhr = new XMLHttpRequest();
-    xhr.open("GET", "ClearResultsServlet", true);
+    const contextPath = window.location.pathname.substring(0, window.location.pathname.indexOf("/", 2));
+    const url = `${contextPath}/ClearResultsServlet`;
 
-    xhr.onreadystatechange = () => {
-        if (xhr.readyState === 4 && xhr.status === 200) {
-            // Display a confirmation message
-            showNotification(xhr.responseText);
-
-            // Clear the session-stored results from the ResultBean array in the main.js
-            const contextPath = window.location.pathname.substring(0, window.location.pathname.indexOf("/", 2));
-            const url = `${contextPath}/ClearResultsServlet`;
-            const clearResultsXhr = new XMLHttpRequest();
-            clearResultsXhr.open("GET", url, true);
-            clearResultsXhr.send();
-        }
-    };
-
-    xhr.send();
+    // Use the shared function to send the request
+    sendRequest(url, (response) => {
+        // Display a confirmation message
+        showNotification(response);
+    });
 }
 
 /**
@@ -66,15 +48,10 @@ document.addEventListener("DOMContentLoaded", () => {
 function fetchServerResults() {
     const contextPath = window.location.pathname.substring(0, window.location.pathname.indexOf("/", 2));
     const url = `${contextPath}/LoadResultsServlet`;
-    const xhr = new XMLHttpRequest();
-    xhr.open("GET", url, true);
 
-    xhr.onreadystatechange = () => {
-        if (xhr.readyState === 4 && xhr.status === 200) {
-            const resultsElement = document.getElementById("resultsTable").querySelector("tbody");
-            resultsElement.innerHTML = xhr.responseText;
-        }
-    };
-
-    xhr.send();
+    // Use the shared function to send the request
+    sendRequest(url, (response) => {
+        // Use the shared function to append the result to the table
+        appendResultToTable(response);
+    });
 }
