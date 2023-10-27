@@ -1,8 +1,7 @@
 package main
 
 import java.io.Serializable
-import java.math.BigDecimal
-import java.math.RoundingMode
+
 
 data class ResultData(
     val x: Double = 0.0,
