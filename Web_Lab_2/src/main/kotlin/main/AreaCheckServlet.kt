@@ -7,6 +7,9 @@ import jakarta.servlet.http.HttpServletResponse
 import java.math.BigDecimal
 import java.math.RoundingMode
 
+/**
+ * AreaCheckServlet is responsible for processing point coordinates and verifying them.
+ */
 @WebServlet(name = "AreaCheckServlet", value = ["/AreaCheckServlet"])
 class AreaCheckServlet : HttpServlet() {
     private val resultBeanComponent = ResultBeanComponent()
@@ -32,7 +35,7 @@ class AreaCheckServlet : HttpServlet() {
 
         val resultData = ResultData(fX, fY, fR, result, userLocalDateTime, fExecutionTime)
 
-        // Store the result on the server
+        // Store the result on the server using the ResultBeanComponent
         resultBeanComponent.addResult(request.session, resultData)
 
         request.setAttribute("resultData", resultData)

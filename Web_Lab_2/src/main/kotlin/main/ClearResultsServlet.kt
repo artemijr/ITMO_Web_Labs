@@ -5,20 +5,18 @@ import jakarta.servlet.http.HttpServlet
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
 
+
+/**
+ * ClearResultsServlet is responsible for clearing the results table and session-stored ResultData objects.
+ */
 @WebServlet(name = "ClearResultsServlet", value = ["/ClearResultsServlet"])
 class ClearResultsServlet : HttpServlet() {
-    /**
-     * Handles a GET request to clear the results table and session-stored ResultBean objects.
-     *
-     * @param request The HttpServletRequest.
-     * @param response The HttpServletResponse for sending a response back to the client.
-     */
     override fun doGet(request: HttpServletRequest, response: HttpServletResponse) {
         response.characterEncoding = "UTF-8"
 
-        // Clear the table by removing the session attribute
-        val session = request.session
-        session.removeAttribute("results")
+        // Clear the table by removing the session attribute using ResultBeanComponent
+        val resultBeanComponent = ResultBeanComponent()
+        resultBeanComponent.clearResults(request.session)
 
         // Send a response indicating the table is cleared
         response.writer.write("<p>Таблица очищена.</p>")
